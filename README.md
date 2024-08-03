@@ -1,5 +1,16 @@
-# OTUS_lessons_10-13_Selenium
-base Selenium
+# OTUS_lessons_10-20_Selenium
+
+[![Header](https://github.com/GoodyrevQA/OTUS_hw1/blob/main/assets/OTUS.jpg)](https://github.com/GoodyrevQA/OTUS_hw1)
+
+### Languages and Tools used:
+[![Pycharm](https://img.shields.io/badge/-Pycharm-24292f??style=for-the-badge&logo=Pycharm&logoColor=79ae42)](https://github.com/GoodyrevQA)
+[![Python](https://img.shields.io/badge/-Python-24292f??style=for-the-badge&logo=Python&logoColor=47c5fb)](https://github.com/GoodyrevQA/python_tg_bot)
+[![Selenium](https://img.shields.io/badge/-Selenium-24292f??style=for-the-badge&logo=Selenium&logoColor=00bf0d)](https://github.com/GoodyrevQA/python_selenium)
+[![pytest](https://img.shields.io/badge/-pytest-24292f??style=for-the-badge&logo=pytest&logoColor=0099d9)](https://github.com/GoodyrevQA/python_autotests)
+[![docker](https://img.shields.io/badge/-Docker-24292f??style=for-the-badge&logo=Docker&logoColor=000000)](https://github.com/GoodyrevQA/python_autotests)
+[![Git](https://img.shields.io/badge/-Git-24292f??style=for-the-badge&logo=Git&logoColor=f43010)](https://github.com/GoodyrevQA)
+
+### Selenium
 
 запуск Docker
 

@@ -7,14 +7,17 @@ from selenium.webdriver.firefox.service import Service as FFService
 from selenium.webdriver.firefox.options import Options as FFOptions
 
 
-BASE_URL = "http://192.168.0.47:8081"
+BASE_URL = "http://192.168.0.19:8081"
 
 
 def pytest_addoption(parser):
     parser.addoption("--browser", action="store", default="chrome")
-    parser.addoption("--url", action="store", default='https://github.com/')
     parser.addoption("--headless", action="store_true")
-    parser.addoption("--yadriver", default=r"C:\projects\python_projects\OTUS_lessons_10-13_Selenium\drivers\yandexdriver.exe")
+    parser.addoption(
+        "--yadriver",
+        default=r"C:\projects\python_projects\OTUS_lessons_10-13_Selenium\drivers\yandexdriver.exe",
+    )
+    parser.addoption("--url", action="store", default="http://192.168.0.21:8081")
 
 
 @pytest.fixture()
@@ -44,10 +47,7 @@ def browser(request):
             r"C:\Users\gie\AppData\Local\Yandex\YandexBrowser\Application\browser.exe"
         )
         driver = webdriver.Chrome(
-            options=options,
-            service=ChromiumService(
-                executable_path=yadriver
-            )
+            options=options, service=ChromiumService(executable_path=yadriver)
         )
 
     elif browser_name == "edge":
@@ -56,14 +56,12 @@ def browser(request):
             options.add_argument("headless=new")
         driver = webdriver.Edge(service=ChromiumService(), options=options)
 
+    else:
+        raise Exception("Driver not supported")
 
+    request.addfinalizer(driver.quit)
     driver.maximize_window()
-
-    # request.addfinalizer(driver.close)
-
     driver.get(url)
     driver.url = url
 
-    yield driver
-
-    driver.quit()
+    return driver
