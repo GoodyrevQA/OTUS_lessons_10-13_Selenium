@@ -1,14 +1,31 @@
 from pages.home_page import HomePage as HP
-from selenium.webdriver.support.wait import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
+from pages.header_page import HeaderPage
+import pytest
 
 
-def test_home_page(browser):
-    WebDriverWait(browser, timeout=2).until(
-        EC.visibility_of_element_located(HP.CAROUSEL_INDICATORS)
-    )
-    browser.find_element(*HP.LOGO)
-    browser.find_element(*HP.SEARCH)
-    browser.find_element(*HP.CURRENCY)
-    browser.find_element(*HP.MAGNIFIER)
-    browser.find_element(*HP.CART_BUTTON)
+def test_home_page_elements(browser):
+    home_page = HP(browser)
+    home_page.get_element(HP.LOGO)
+    home_page.get_element(HP.SEARCH)
+    home_page.get_element(HP.MAGNIFIER)
+    home_page.get_element(HP.CAROUSEL_INDICATORS)
+
+
+@pytest.mark.parametrize(
+    "loc, cur",
+    [(HP.EURO, "€"), (HP.USD, "$"), (HP.GBP, "£")],
+    ids=("EURO", "USD", "GBP"),
+)
+def test_change_currency(browser, loc, cur):
+    home_page = HP(browser)
+
+    HeaderPage(browser).click_on_currency_switch()
+    HeaderPage(browser).select_currency(loc)
+
+    cart_button = HeaderPage(browser).get_element(HeaderPage.CART_BUTTON)
+    home_page.check_text_in_element(cur, cart_button)
+
+    new_prices = home_page.get_elements(HP.NEW_PRICES)
+    tax_prices = home_page.get_elements(HP.TAX_PRICES)
+    for price in new_prices + tax_prices:
+        home_page.check_text_in_element(cur, price)

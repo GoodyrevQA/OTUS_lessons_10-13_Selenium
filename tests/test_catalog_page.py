@@ -1,15 +1,39 @@
 from pages.catalog_page import CatalogPage as CP
+from pages.home_page import HomePage as HP
+from pages.header_page import HeaderPage
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
+import pytest
 
 
-def test_catalog_page(browser):
-    browser.get(browser.url + "/en-gb/catalog/cameras")
-    WebDriverWait(browser, timeout=2).until(
-        EC.visibility_of_element_located(CP.TEXT_END)
-    )
-    browser.find_element(*CP.HOME)
-    browser.find_element(*CP.INPUT_SORT)
-    browser.find_element(*CP.BUTTON_GRID)
-    browser.find_element(*CP.BUTTON_LIST)
-    browser.find_element(*CP.PRODUCT_COMPARE)
+def test_catalog_page_elements(browser):
+    catalog_page = CP(browser)
+    catalog_page.open_cameras_page()
+
+    catalog_page.get_element(CP.HOME)
+    catalog_page.get_element(CP.INPUT_SORT)
+    catalog_page.get_element(CP.BUTTON_GRID)
+    catalog_page.get_element(CP.BUTTON_LIST)
+    catalog_page.get_element(CP.PRODUCT_COMPARE)
+
+
+@pytest.mark.parametrize(
+    "loc, cur",
+    [(HP.EURO, "€"), (HP.USD, "$"), (HP.GBP, "£")],
+    ids=("EURO", "USD", "GBP"),
+)
+def test_change_currency_from_catalog_page(browser, loc, cur):
+    home_page = HP(browser)
+    catalog_page = CP(browser)
+    catalog_page.open_cameras_page()
+
+    HeaderPage(browser).click_on_currency_switch()
+    HeaderPage(browser).select_currency(loc)
+
+    cart_button = HeaderPage(browser).get_element(HeaderPage.CART_BUTTON)
+    home_page.check_text_in_element(cur, cart_button)
+
+    new_prices = home_page.get_elements(HP.NEW_PRICES)
+    tax_prices = home_page.get_elements(HP.TAX_PRICES)
+    for price in new_prices + tax_prices:
+        home_page.check_text_in_element(cur, price)

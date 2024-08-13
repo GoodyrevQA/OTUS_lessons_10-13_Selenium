@@ -7,7 +7,7 @@ from selenium.webdriver.firefox.service import Service as FFService
 from selenium.webdriver.firefox.options import Options as FFOptions
 
 
-BASE_URL = "http://192.168.0.19:8081"
+# BASE_URL = "http://192.168.0.19:8081"
 
 
 def pytest_addoption(parser):
@@ -17,7 +17,7 @@ def pytest_addoption(parser):
         "--yadriver",
         default=r"C:\projects\python_projects\OTUS_lessons_10-13_Selenium\drivers\yandexdriver.exe",
     )
-    parser.addoption("--url", action="store", default="http://192.168.0.21:8081")
+    parser.addoption("--url", action="store", default="http://192.168.0.22:8081")
 
 
 @pytest.fixture()
