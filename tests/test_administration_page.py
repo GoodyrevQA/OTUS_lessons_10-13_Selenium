@@ -21,8 +21,11 @@ def test_login_logout(browser):
     administration_page = AP(browser)
     administration_page.open()
 
-    administration_page.fill_username(os.getenv("USER_NAME"))
-    administration_page.fill_password(os.getenv("PASSWORD"))
+    username = os.getenv("USER_NAME")
+    administration_page.fill_username(username)
+
+    pssw = os.getenv("PASSWORD")
+    administration_page.fill_password(pssw)
 
     administration_page.click_login_button()
     administration_page.get_element(AP.AUTHORIZED_USER)

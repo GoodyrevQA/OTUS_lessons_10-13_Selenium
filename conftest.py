@@ -1,13 +1,12 @@
 import pytest
+import logging
+import datetime
 
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service as ChromiumService
 from selenium.webdriver.chrome.options import Options as ChromeOptions
 from selenium.webdriver.firefox.service import Service as FFService
 from selenium.webdriver.firefox.options import Options as FFOptions
-
-
-# BASE_URL = "http://192.168.0.19:8081"
 
 
 def pytest_addoption(parser):
@@ -17,7 +16,8 @@ def pytest_addoption(parser):
         "--yadriver",
         default=r"C:\projects\python_projects\OTUS_lessons_10-13_Selenium\drivers\yandexdriver.exe",
     )
-    parser.addoption("--url", action="store", default="http://192.168.0.22:8081")
+    parser.addoption("--url", action="store", default="http://192.168.0.27:8081")
+    parser.addoption("--test_log_level", action="store", default="DEBUG")
 
 
 @pytest.fixture()
@@ -26,6 +26,16 @@ def browser(request):
     url = request.config.getoption("--url")
     headless = request.config.getoption("--headless")
     yadriver = request.config.getoption("--yadriver")
+    log_level = request.config.getoption("--test_log_level")
+
+    logger = logging.getLogger(request.node.name)
+    file_handler = logging.FileHandler(f"logs/{request.node.name}.log")
+    file_handler.setFormatter(logging.Formatter("%(asctime)s - %(name)s - %(levelname)s - %(message)s"))
+    logger.addHandler(file_handler)
+    logger.setLevel(level=log_level)
+
+
+    logger.info("===> Test %s started at %s" % (request.node.name, datetime.datetime.now()))
 
     if browser_name == "chrome":
         options = ChromeOptions()
@@ -59,9 +69,18 @@ def browser(request):
     else:
         raise Exception("Driver not supported")
 
-    request.addfinalizer(driver.quit)
+    driver.log_level = log_level
+    driver.logger = logger
+    driver.test_name = request.node.name
+
+    logger.info("Browser %s started" % browser)
+
+    def fin():
+        driver.quit()
+        logger.info("===> Test %s finished at %s" % (request.node.name, datetime.datetime.now()))
+
+    request.addfinalizer(fin)
     driver.maximize_window()
     driver.get(url)
     driver.url = url
-
     return driver
