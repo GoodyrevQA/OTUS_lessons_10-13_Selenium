@@ -1,5 +1,6 @@
 from selenium.webdriver.common.by import By
 from pages.base_page import BasePage
+import allure
 
 
 class ProductPage(BasePage):
@@ -10,5 +11,6 @@ class ProductPage(BasePage):
     IMAGE = (By.CSS_SELECTOR, ".img-thumbnail.mb-3")
     PRODUCT_DESCRIPTION = (By.CSS_SELECTOR, "#tab-description.show")
 
+    @allure.step("Click button ADD to cart")
     def add_to_cart(self):
         self.click(self.ADD_TO_CART_BUTTON)

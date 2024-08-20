@@ -3,8 +3,13 @@ from pages.administration_page import AdministrationPage as AP
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from faker import Faker
+from allure_commons.types import Severity
+import allure
 
 
+@allure.feature("Check elements")
+@allure.title("Check Register page elements")
+@allure.severity(severity_level=Severity.NORMAL)
 def test_register_page_elements(browser):
     register_page = RP(browser)
     register_page.open()
@@ -16,6 +21,9 @@ def test_register_page_elements(browser):
     register_page.get_element(RP.FIRST_NAME)
 
 
+@allure.feature("Registration")
+@allure.title("Registration of new user")
+@allure.severity(severity_level=Severity.CRITICAL)
 def test_register_new_user(browser):
     register_page = RP(browser)
     register_page.open()

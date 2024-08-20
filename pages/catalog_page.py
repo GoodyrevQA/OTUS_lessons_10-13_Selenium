@@ -1,5 +1,6 @@
 from selenium.webdriver.common.by import By
 from pages.base_page import BasePage
+import allure
 
 
 class CatalogPage(BasePage):
@@ -10,5 +11,6 @@ class CatalogPage(BasePage):
     INPUT_SORT = (By.CSS_SELECTOR, "#input-sort")
     TEXT_END = (By.CSS_SELECTOR, ".text-end")
 
+    @allure.step("Open page Cameras")
     def open_cameras_page(self):
         self.browser.get(self.browser.url + "/en-gb/catalog/cameras")
