@@ -1,8 +1,13 @@
 from pages.home_page import HomePage as HP
 from pages.header_page import HeaderPage
 import pytest
+from allure_commons.types import Severity
+import allure
 
 
+@allure.feature("Check elements")
+@allure.title("Check Home page elements")
+@allure.severity(severity_level=Severity.NORMAL)
 def test_home_page_elements(browser):
     home_page = HP(browser)
     home_page.get_element(HP.LOGO)
@@ -11,6 +16,9 @@ def test_home_page_elements(browser):
     home_page.get_element(HP.CAROUSEL_INDICATORS)
 
 
+@allure.feature("Change currency")
+@allure.title("Change currency in home page")
+@allure.severity(severity_level=Severity.NORMAL)
 @pytest.mark.parametrize(
     "loc, cur",
     [(HP.EURO, "€"), (HP.USD, "$"), (HP.GBP, "£")],

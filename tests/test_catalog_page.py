@@ -4,8 +4,13 @@ from pages.header_page import HeaderPage
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 import pytest
+from allure_commons.types import Severity
+import allure
 
 
+@allure.feature("Check elements")
+@allure.title("Check Catalog page elements")
+@allure.severity(severity_level=Severity.NORMAL)
 def test_catalog_page_elements(browser):
     catalog_page = CP(browser)
     catalog_page.open_cameras_page()
@@ -17,6 +22,9 @@ def test_catalog_page_elements(browser):
     catalog_page.get_element(CP.PRODUCT_COMPARE)
 
 
+@allure.feature("Change currency")
+@allure.title("Change currency in catalog page")
+@allure.severity(severity_level=Severity.NORMAL)
 @pytest.mark.parametrize(
     "loc, cur",
     [(HP.EURO, "€"), (HP.USD, "$"), (HP.GBP, "£")],

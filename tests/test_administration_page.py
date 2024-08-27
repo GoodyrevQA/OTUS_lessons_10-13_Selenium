@@ -4,8 +4,13 @@ from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 import os
 import dotenv
+import allure
+from allure_commons.types import Severity
 
 
+@allure.feature("Check elements")
+@allure.title("Check Administration page elements")
+@allure.severity(severity_level=Severity.NORMAL)
 def test_administration_page_elements(browser):
     administration_page = AP(browser)
     administration_page.open()
@@ -17,20 +22,33 @@ def test_administration_page_elements(browser):
     administration_page.get_element(AP.USERNAME_INPUT)
 
 
+@allure.feature("Authorization")
+@allure.story("Valid credentials")
+@allure.title("Authorization with valid credentials")
+@allure.severity(severity_level=Severity.BLOCKER)
 def test_login_logout(browser):
     administration_page = AP(browser)
     administration_page.open()
 
-    administration_page.fill_username(os.getenv("USER_NAME"))
-    administration_page.fill_password(os.getenv("PASSWORD"))
+    username = os.getenv("USER_NAME")
+    administration_page.fill_username(username)
+
+    pssw = os.getenv("PASSWORD")
+    administration_page.fill_password(pssw)
 
     administration_page.click_login_button()
     administration_page.get_element(AP.AUTHORIZED_USER)
 
     administration_page.click_logout_button()
     administration_page.get_element(AP.ALL_RIGHTS_RESERVED)
+    # добавил проверку на несуществующий локатор для теста скриншотов аллюра
+    administration_page.is_present(AP.WRONG_LOCATOR)
 
 
+@allure.feature("Administration")
+@allure.story("Products Administration")
+@allure.title("Add product")
+@allure.severity(severity_level=Severity.CRITICAL)
 def test_add_new_product(browser):
     administration_page = AP(browser)
     alert_page = AlertSuccessElement(browser)
@@ -61,6 +79,10 @@ def test_add_new_product(browser):
     )
 
 
+@allure.feature("Administration")
+@allure.story("Products Administration")
+@allure.title("Remove product")
+@allure.severity(severity_level=Severity.NORMAL)
 def test_remove_product(browser):
     administration_page = AP(browser)
     alert_page = AlertSuccessElement(browser)

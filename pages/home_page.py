@@ -1,5 +1,6 @@
 from selenium.webdriver.common.by import By
 from pages.base_page import BasePage
+import allure
 
 
 class HomePage(BasePage):
@@ -21,8 +22,10 @@ class HomePage(BasePage):
 
     FEATURED_PRODUCT_NAMES = (By.CSS_SELECTOR, ".col.mb-3 h4 a")
 
+    @allure.step("Get featured product name (index={index})")
     def get_featured_product_name_by_index(self, index=0):
         return self.get_elements(self.FEATURED_PRODUCT_NAMES)[index].text
 
+    @allure.step("Click featured product (index={index})")
     def click_featured_product_by_index(self, index=0):
         self.get_elements(self.FEATURED_PRODUCT_NAMES)[index].click()

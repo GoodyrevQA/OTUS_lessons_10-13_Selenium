@@ -5,8 +5,13 @@ from pages.alert_element import AlertSuccessElement
 from pages.shopping_cart_page import ShoppingCartPage
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
+from allure_commons.types import Severity
+import allure
 
 
+@allure.feature("Check elements")
+@allure.title("Check Product page elements")
+@allure.severity(severity_level=Severity.NORMAL)
 def test_product_page_elements(browser):
     home_page = HP(browser)
     product_page = PP(browser)
@@ -20,6 +25,9 @@ def test_product_page_elements(browser):
     product_page.get_element(PP.COMPARE_PRODUCT)
 
 
+@allure.feature("Registration")
+@allure.title("Registration of new user")
+@allure.severity(severity_level=Severity.CRITICAL)
 def test_add_product_to_the_cart(browser):
     home_page = HP(browser)
     product_page = PP(browser)
