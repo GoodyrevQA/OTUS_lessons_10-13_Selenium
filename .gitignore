@@ -166,3 +166,4 @@ logs
 #allure
 allure-results/
 allure-report/
+.ruff_cache
