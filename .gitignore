@@ -162,6 +162,8 @@ cython_debug/
 .idea/
 drivers
 logs
+.vscode
+.ruff_cache
 
 #allure
 allure-results/
