@@ -34,3 +34,27 @@
 2. в файле docker-compose.yaml установить переменной OPENCART_HOST значение своего ip и порт 8081 (OPENCART_HOST=192.168.0.17:8081)
 3. в PowerShell перейти в папку, где лежит файл docker-compose.yaml
 4. выполнить команду docker-compose up -d
+
+описание задания с docker compose https://github.com/OtusTeam/QA-Python/blob/master/docker-compose/hw.md
+коротко:
+- в docker-compose.yml описываются шаги создания и запуска прилложения opencart,
+которое состоит из 3-х контейнеров: phpadmin, mariadb, opencart + создание и запуск
+контейнера с тестами для него.
+- для запуска используется selenoid, который должен быть поднят отдельно (в примере сеть также называется selenoid).
+```
+docker run -d --name selenoid-ui --network selenoid -p 8090:8080 aerokube/selenoid-ui:1.10.11 --selenoid-uri http://selenoid:4444
+```
+в в docker-compose.yml добавлен блок
+```
+networks:
+  default:
+    name: selenoid
+    external: true
+```
+за счет этого 4 сервиса и сам selenoid будут находиться в одной сети, что обеспечит их связность и позволит им взаимодействовать между собой.
+- Так как opencart не стартует мгновенно, при запуске сервиса с тестами нужно организовать ожидание,
+пока opencart полностью перейдёт в рабочее состояние. Для этого можно использовать скрипт wait-for-it.sh.
+- для сборки приложения и запуска тестов нужно предварительно поднять selenoid и выполнить команду 
+```
+docker compose up
+```

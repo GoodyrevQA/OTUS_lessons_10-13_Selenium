@@ -38,8 +38,8 @@ services:
       dockerfile: Dockerfile
     depends_on:
       - opencart
-    command: 
-
+    command: ./wait-for-it.sh opencart 8080 pytest --remote --url http://192.168.0.24:8081 --executor 192.168.0.24 --browser chrome --bv 127.0
+ 
 networks:
   default:
     name: selenoid
