@@ -14,9 +14,13 @@ COPY requirements.txt .
 RUN pip install -U pip
 RUN pip install -r requirements.txt
 RUN apk add --no-cache coreutils
+RUN chmod +x wait-for-it.sh
 
 # Копирование остальных файлов проекта
 COPY . .
 
-# Запуск тестов
-CMD ["pytest", "--remote", "--url", "http://192.168.0.21:8081", "--executor", "192.168.0.21"]
+# Запуск 
+# CMD ["pytest", "--remote", "--url", "http://192.168.0.24:8081", "--executor", "192.168.0.24"]
+CMD ["sh"]
+
+# docker run --network selenoid opencart-tests-sh pytest --remote --url http://192.168.0.24:8081 --executor 192.168.0.24

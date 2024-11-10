@@ -24,7 +24,7 @@ services:
       - '8081:8080'
       - '443:8443'
     environment:
-      - OPENCART_HOST=192.168.0.21:8081
+      - OPENCART_HOST=192.168.0.24:8081
       - OPENCART_DATABASE_HOST=mariadb
       - OPENCART_DATABASE_PORT_NUMBER=3306
       - OPENCART_DATABASE_USER=bn_opencart
@@ -34,9 +34,11 @@ services:
       - mariadb
 
   tests:
-    build: .
+    build:
+      dockerfile: Dockerfile
     depends_on:
       - opencart
+    command: 
 
 networks:
   default:

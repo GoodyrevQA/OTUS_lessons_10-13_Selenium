@@ -27,7 +27,7 @@ def pytest_addoption(parser):
         "--yadriver",
         default=r"C:\projects\python_projects\OTUS_lessons_10-13_Selenium\drivers\yandexdriver.exe",
     )
-    parser.addoption("--url", action="store", default="http://192.168.0.21:8081")
+    parser.addoption("--url", action="store", default="http://192.168.0.24:8081")
     parser.addoption("--test_log_level", action="store", default="DEBUG")
 
     parser.addoption("--executor", action="store", default="127.0.0.1")
