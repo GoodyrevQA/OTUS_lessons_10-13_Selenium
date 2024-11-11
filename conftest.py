@@ -27,8 +27,14 @@ def pytest_addoption(parser):
         "--yadriver",
         default=r"C:\projects\python_projects\OTUS_lessons_10-13_Selenium\drivers\yandexdriver.exe",
     )
-    parser.addoption("--url", action="store", default="http://192.168.0.27:8081")
+    parser.addoption("--url", action="store", default="http://192.168.0.24:8081")
     parser.addoption("--test_log_level", action="store", default="DEBUG")
+
+    parser.addoption("--executor", action="store", default="127.0.0.1")
+    parser.addoption("--remote", action="store_true")
+    parser.addoption("--bv", action="store", default="128.0")
+    parser.addoption("--vnc", action="store_true")
+    parser.addoption("--video", action="store_true")
 
 
 @pytest.fixture()
@@ -38,45 +44,87 @@ def browser(request):
     headless = request.config.getoption("--headless")
     yadriver = request.config.getoption("--yadriver")
     log_level = request.config.getoption("--test_log_level")
+    
+    executor = request.config.getoption("--executor")
+    remote = request.config.getoption("--remote")
+    browser_version = request.config.getoption("--bv")
+    vnc = request.config.getoption("--vnc")
+    video = request.config.getoption("--video")
+    
 
     browser_logger = logging.getLogger(request.node.name)
-
     browser_logger.info(
         "===> Test %s started at %s" % (request.node.name, datetime.datetime.now())
     )
 
-    if browser_name == "chrome":
-        options = ChromeOptions()
-        if headless:
-            options.add_argument("headless=new")
-        driver = webdriver.Chrome(service=ChromiumService(), options=options)
+    # если запуск удаленно
+    if remote:
+        executor_url = f"http://{executor}:4444/wd/hub"
 
-    elif browser_name == "firefox":
-        options = FFOptions()
-        if headless:
-            options.add_argument("--headless")
-        driver = webdriver.Firefox(options=options, service=FFService())
+        if browser_name == "chrome":
+            options = ChromeOptions()
+        elif browser_name == "firefox":
+            options = FFOptions()
+        else:
+            raise ValueError('Only the "chrome" and "firefox" browsers are supported')
+        
+        capabilities = {
+                            "browserVersion": browser_version,
+                            "selenoid:options": {
+                                                    "enableVNC": vnc,
+                                                    "name": request.node.name,
+                                                    "screenResolution": "1920x1080",
+                                                    "enableVideo": video,
+                                                    "timeZone": "Europe/Moscow",
+                                                    "env": ["LANG=ru_RU.UTF-8", "LANGUAGE=ru:en", "LC_ALL=ru_RU.UTF-8"],
+                                                    "sessionTimeout": "30m"
+                                                },
+                            "acceptInsecureCerts": True,
+                        }
 
-    elif browser_name == "yandex":
-        options = ChromeOptions()
-        if headless:
-            options.add_argument("headless=new")
-        options.binary_location = (
-            r"C:\Users\gie\AppData\Local\Yandex\YandexBrowser\Application\browser.exe"
+        for k, v in capabilities.items():
+            options.set_capability(k, v)
+
+        driver = webdriver.Remote(
+            command_executor=executor_url,
+            options=options,
         )
-        driver = webdriver.Chrome(
-            options=options, service=ChromiumService(executable_path=yadriver)
-        )
 
-    elif browser_name == "edge":
-        options = ChromeOptions()
-        if headless:
-            options.add_argument("headless=new")
-        driver = webdriver.Edge(service=ChromiumService(), options=options)
-
+    # если запуск локально
     else:
-        raise Exception("Driver not supported")
+        if browser_name == "chrome":
+            options = ChromeOptions()
+            if headless:
+                options.add_argument("headless=new")
+            driver = webdriver.Chrome(service=ChromiumService(), options=options)
 
+        elif browser_name == "firefox":
+            options = FFOptions()
+            if headless:
+                options.add_argument("--headless")
+            driver = webdriver.Firefox(options=options, service=FFService())
+
+        elif browser_name == "yandex":
+            options = ChromeOptions()
+            if headless:
+                options.add_argument("headless=new")
+            options.binary_location = (
+                r"C:\Users\gie\AppData\Local\Yandex\YandexBrowser\Application\browser.exe"
+            )
+            driver = webdriver.Chrome(
+                options=options, service=ChromiumService(executable_path=yadriver)
+            )
+
+        elif browser_name == "edge":
+            options = ChromeOptions()
+            if headless:
+                options.add_argument("headless=new")
+            driver = webdriver.Edge(service=ChromiumService(), options=options)
+
+        else:
+            raise Exception("Driver not supported")
+    
+    
     driver.log_level = log_level
     driver.test_name = request.node.name
 

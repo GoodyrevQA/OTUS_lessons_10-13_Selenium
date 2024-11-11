@@ -13,10 +13,12 @@ COPY requirements.txt .
 # Установка зависимостей
 RUN pip install -U pip
 RUN pip install -r requirements.txt
+RUN apk add --no-cache coreutils
 
 # Копирование остальных файлов проекта
 COPY . .
 
-# Запуск тестов
-ENTRYPOINT ["pytest"]
-CMD ["--tb=short"]
+RUN chmod +x wait-for-it.sh
+
+# Запуск 
+CMD ["pytest"]
