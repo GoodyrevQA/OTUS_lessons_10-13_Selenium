@@ -30,7 +30,7 @@ def pytest_addoption(parser):
     parser.addoption("--url", action="store", default="http://192.168.0.25:8081")
     parser.addoption("--test_log_level", action="store", default="DEBUG")
 
-    parser.addoption("--executor", action="store", default="127.0.0.1")
+    parser.addoption("--executor", action="store", default="192.168.0.25")
     parser.addoption("--remote", action="store_true")
     parser.addoption("--bv", action="store", default="128.0")
     parser.addoption("--vnc", action="store_true")
