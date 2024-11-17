@@ -35,6 +35,8 @@
 3. в PowerShell перейти в папку, где лежит файл docker-compose.yaml
 4. выполнить команду docker-compose up -d
 
+
+
 описание задания с docker compose https://github.com/OtusTeam/QA-Python/blob/master/docker-compose/hw.md
 коротко:
 - в docker-compose.yml описываются шаги создания и запуска прилложения opencart,
