@@ -21,4 +21,4 @@ COPY . .
 RUN chmod +x wait-for-it.sh
 
 # Запуск 
-CMD ["pytest"]
+# CMD ["pytest"]
