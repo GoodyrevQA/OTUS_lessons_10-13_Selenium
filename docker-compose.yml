@@ -24,7 +24,7 @@ services:
       - '8081:8080'
       - '443:8443'
     environment:
-      - OPENCART_HOST=192.168.0.25:8081
+      - OPENCART_HOST=192.168.0.31:8081
       - OPENCART_DATABASE_HOST=mariadb
       - OPENCART_DATABASE_PORT_NUMBER=3306
       - OPENCART_DATABASE_USER=bn_opencart
@@ -38,7 +38,7 @@ services:
       dockerfile: Dockerfile
     depends_on:
       - opencart
-    command: ./wait-for-it.sh opencart 8080 pytest --remote --url http://192.168.0.25:8081 --executor 192.168.0.25 --browser chrome --bv 127.0
+    command: ./wait-for-it.sh opencart 8080 pytest --remote --url http://192.168.0.31:8081 --executor 192.168.0.31 --browser chrome --bv 127.0
  
 networks:
   default:

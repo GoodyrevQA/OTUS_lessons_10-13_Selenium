@@ -151,7 +151,7 @@ def browser(request):
 
     finally:
         driver.quit()
-        driver.close()
+        # driver.close()
         browser_logger.info(
             "===> Test %s finished at %s" % (request.node.name, datetime.datetime.now())
         )
