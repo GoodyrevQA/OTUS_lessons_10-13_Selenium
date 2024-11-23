@@ -60,3 +60,47 @@ networks:
 ```
 docker compose up
 ```
+
+
+### Настройка Jenkins:
+Инструкция:
+https://docs.google.com/document/d/1VsRfM31dv6cdzzRRVdK5Fiu_HEq0mcBmo2lu_PGVw3Y/edit?tab=t.0#heading=h.icoyi4idm65z
+
+Находясь в директории с Dockerfile для создания образа Jenkins c доккером внутри 'docker-file-for-jenkins'
+создать образ:
+```
+docker build -t jenkins-with-docker .
+```
+
+на основе образа создать контейнер (333 - имя дашборда в Jenkins):
+```
+docker run -d --name jenkins-docker -p 50000:50000 -p 8080:8080 -v /var/run/docker.sock:/var/run/docker.sock -v jenkins_home:/var/jenkins_home \
+-v jenkins-shared-data:/var/jenkins_home/workspace/333/allure-results jenkins-with-docker
+```
+параметр -v /var/run/docker.sock:/var/run/docker.sock монтирует доккер соккет хоста в контейнер
+-v jenkins_home:/var/jenkins_home сохраняет данные Jenkins между перезапусками контейнера
+-v jenkins-shared-data:/var/jenkins_home/workspace/333/allure-results создает общий том, к которому потом подключится и поднятый контейнер с тестами
+
+Чтобы у пользователя Jenkins были права на соккет хоста и на запись в общий том,
+нужно зайти в контейнер Jenkins с правами администратора:
+```
+docker exec -it --user root jenkins-docker /bin/sh
+```
+и выполнить команды:
+```
+chmod 666 /var/run/dpcker.sock
+chown -R jenkins:jenkins /var/jenkins_home/workspace/333/allure-results
+chmod -R 755 /var/jenkins_home/workspace/333/allure-results
+```
+
+### Внутри контейнера Jenkins (в web интерфейсе Jenkins)
+Настраиваем параметры сборки.
+Создаем образ с тестами с тестами (Dockerfile находится в корне, в Jenkins он скачается с репозитория):
+```
+docker build -t pytest333 .
+```
+создаем и запускаем контейнер с тестами с указанием общего тома:
+```
+docker run -i --rm -v jenkins-shared-data:/app/allure-results pytest333 pytest --remote --url ${url} --executor ${executor} \
+--browser ${browser_name} --bv ${browser_version} -n ${number_of_threads} --alluredir=allure-results ./tests
+```
